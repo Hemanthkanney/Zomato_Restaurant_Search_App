@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurant List</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .card {
+      cursor: pointer;
+      transition: box-shadow 0.3s ease-in-out;
+      border: none; /* Remove the card border */
+      border-radius: 10px;
+    }
+
+    .card:hover {
+      color: rgb(234, 38, 38);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .card img {
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .card-body {
+      text-align: left;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+    }
+
+    .card-rating {
+      text-align: right;
+      font-size: 1rem;
+      color: #ff9529;
+    }
+
+    .card-cuisines {
+      font-size: 0.9rem;
+      color: #6c757d;
+    }
+
+    .search-bar-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .search-bar {
+      width: 50%;
+      position: relative;
+    }
+
+    .search-bar:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding-right: 40px;
+    }
+
+    .search-bar button {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      padding-bottom: 13px;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center">Zomato</h1>
+    <div class="search-bar-container">
+      <div class="search-bar">
+        <input type="text" id="search-bar" class="form-control" placeholder="Search by name or ID">
+        <button style="font-size:24px" id="search-button"><i class="fa fa-search"></i></button>
+      </div>
+    </div>
+    <div id="restaurant-container" class="row">
+      <!-- Restaurant cards will be inserted here -->
+    </div>
+    <div class="d-flex justify-content-between mt-3">
+      <button id="prev-btn" class="btn btn-secondary" style="display: none;">Prev</button>
+      <button id="next-btn" class="btn btn-secondary" style="display: none;">Next</button>
+    </div>
+  </div>
+  <script>
+    let count = 1;
+
+    function fetchRestaurants(query, page) {
+      const url = `/api/restaurants/search?query=${encodeURIComponent(query)}&page=${page}&limit=15`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const container = document.getElementById('restaurant-container');
+          container.innerHTML = ''; // Clear previous results
+          if (data.length > 0) {
+            data.forEach(restaurant => {
+              const card = document.createElement('div');
+              card.className = 'col-md-4 mb-4';
+              card.innerHTML = `
+                <div class="card h-100" onclick="location.href='/restaurant?id=${restaurant.id}'">
+                  <img src="${restaurant.featured_image || 'default-image.jpg'}" class="card-img-top" alt="${restaurant.name}">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                      <h5 class="card-title">${restaurant.name}</h5>
+                      <p class="card-rating">${restaurant.aggregate_rating}</p>
+                    </div>
+                    <p class="card-cuisines">${restaurant.cuisines}</p>
+                    <p class="card-text">${restaurant.city}</p>
+                  </div>
+                </div>
+              `;
+              container.appendChild(card);
+            });
+            document.getElementById('prev-btn').style.display = page > 1 ? 'block' : 'none';
+            document.getElementById('next-btn').style.display = data.length === 15 ? 'block' : 'none';
+          } else {
+            container.innerHTML = '<p class="text-center">No results found</p>';
+            document.getElementById('prev-btn').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'none';
+          }
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    }
+
+    function handleSearch() {
+      const query = document.getElementById('search-bar').value;
+      count = 1; // Reset page count on new search
+      fetchRestaurants(query, count);
+    }
+
+    document.getElementById('next-btn').addEventListener('click', () => {
+      const query = document.getElementById('search-bar').value;
+      count++;
+      fetchRestaurants(query, count);
+    });
+
+    document.getElementById('prev-btn').addEventListener('click', () => {
+      const query = document.getElementById('search-bar').value;
+      if (count > 1) {
+        count--;
+        fetchRestaurants(query, count);
+      }
+    });
+
+    document.getElementById('search-button').addEventListener('click', handleSearch);
+
+    document.getElementById('search-bar').addEventListener('keyup', (event) => {
+      if (event.key === 'Enter') {
+        handleSearch();
+      }
+    });
+  </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
