@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="/styles.css">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <style>
+    body {
+      background-color: red; /* Set the background color of the body */
+    }
     .card {
       cursor: pointer;
       transition: box-shadow 0.3s ease-in-out;
@@ -75,6 +78,16 @@
       cursor: pointer;
       padding-bottom: 13px;
     }
+
+    .btn-blue {
+      background-color: blue;
+      color: white;
+      border: none;
+    }
+
+    .btn-blue:hover {
+      background-color: darkblue;
+    }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -91,8 +104,8 @@
       <!-- Restaurant cards will be inserted here -->
     </div>
     <div class="d-flex justify-content-between mt-3">
-      <button id="prev-btn" class="btn btn-secondary" style="display: none;">Prev</button>
-      <button id="next-btn" class="btn btn-secondary" style="display: none;">Next</button>
+      <button id="prev-btn" class="btn btn-secondary btn-blue" style="display: none;">Prev</button>
+      <button id="next-btn" class="btn btn-secondary btn-blue" style="display: none;">Next</button>
     </div>
   </div>
   <script>

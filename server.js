@@ -4,16 +4,13 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
-// Serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Set EJS as the view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'public'));
 
-// Create a MySQL connection
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -37,7 +34,7 @@ if (fs.existsSync(imageUrlsPath)) {
 // Function to get image URL by restaurant ID
 const getImageUrlById = (id) => {
   const image = imageUrls.find(img => img.id === id);
-  return image ? image.imageUrl : 'default-image-url'; // Replace with a default image URL
+  return image ? image.imageUrl : '/zomatodef.jpg';
 };
 
 // API endpoint to get restaurant by ID

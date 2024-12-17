@@ -3,11 +3,11 @@ document.getElementById('search-button').addEventListener('click', () => {
   const city = document.getElementById('filter-city').value;
   const cuisine = document.getElementById('filter-cuisine').value;
 
-  fetch(`http://localhost:3000/api/restaurants/search?query=${encodeURIComponent(query)}&page=1&limit=10`)
+  fetch(`http://localhost:3001/api/restaurants/search?query=${encodeURIComponent(query)}&page=1&limit=10`)
     .then(response => response.json())
     .then(data => {
       const tableBody = document.querySelector('#restaurant-table tbody');
-      tableBody.innerHTML = ''; // Clear previous results
+      tableBody.innerHTML = '';
       data.forEach(restaurant => {
         const row = document.createElement('tr');
         row.innerHTML = `
